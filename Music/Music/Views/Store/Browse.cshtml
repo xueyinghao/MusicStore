@@ -1,0 +1,17 @@
+﻿@model Music.Models.Genre
+@{
+    ViewBag.Title = "Browse";
+}
+
+<h2>Browse</h2>
+
+<ul>
+    @foreach (var item in Model.Albums)
+    {
+        <li>@Html.ActionLink(item.Title, "Del", new {id=item.AlbumId})</li>
+    }
+   
+</ul>
+
+
+
