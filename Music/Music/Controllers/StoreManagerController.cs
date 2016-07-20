@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Music.Models;
+using System.Data.Entity;
 
 namespace Music.Controllers
 {
@@ -42,27 +43,63 @@ namespace Music.Controllers
         public ActionResult Edit(int id)
         {
             Album album = storeDB.Albums.Find(id);
+            ViewBag.ArtistId = new SelectList(storeDB.Artists, "ArtistId", "Name", album.ArtistId);
+            ViewBag.GenreId = new SelectList(storeDB.Genres, "GenreId", "Name", album.GenreId);
             return View(album);
         }
+
+        //这里使用了FormCollection来传递表单数据,使用模型传递的还没搞清楚
+        //[HttpPost]
+        //public ActionResult Edit(int id,FormCollection form)
+        //{
+        //    try
+        //    {
+        //        Album album = storeDB.Albums.Find(id);
+        //        if (this.TryUpdateModel<Music.Models.Album>(album))
+        //        {
+        //            album.Title = form["Title"];
+        //            album.Price =decimal.Parse(form["Price"]);
+        //            storeDB.Entry(album).State = System.Data.Entity.EntityState.Modified;
+        //            storeDB.SaveChanges();
+        //            return RedirectToAction("Index");
+        //        }
+        //        //状态未改变则继续显示之前的数据
+        //        ViewBag.ArtistId = new SelectList(storeDB.Artists, "ArtistId", "Name", album.ArtistId);
+        //        ViewBag.GenreId = new SelectList(storeDB.Genres, "GenreId", "Name", album.GenreId);
+        //        return View();
+        //    }
+        //    catch 
+        //    {
+        //        return View();
+        //    }
+        //}
+
+        //------------------------------------------------------------------------------------------------------------我是一条分割线
+
+        //貌似这里就是使用模型进行绑定处理的方法
+        //测试显示是没问题的,还要在继续研究研究,还是不懂耶
         [HttpPost]
-        public ActionResult Edit(int id,FormCollection form)
+        public ActionResult Edit(Album album)
         {
             try
             {
-                Album album = storeDB.Albums.Find(id);
-                if (this.TryUpdateModel<Music.Models.Album>(album))
+                if (ModelState.IsValid)
                 {
+                    storeDB.Entry(album).State = System.Data.Entity.EntityState.Modified;
+                    storeDB.SaveChanges();
                     return RedirectToAction("Index");
                 }
-                //ViewBag.ArtistId = new SelectList(storeDB.Artists, "ArtistId", "Name", album.ArtistId);
-                //ViewBag.GenreId = new SelectList(storeDB.Genres, "GenreId", "Name", album.GenreId);
-                return View();
+                ViewBag.ArtistId = new SelectList(storeDB.Artists, "ArtistId", "Name", album.ArtistId);
+                ViewBag.GenreId = new SelectList(storeDB.Genres, "GenreId", "Name", album.GenreId);
+                return View(album);
             }
-            catch 
+            catch
             {
                 return View();
             }
         }
+
+
 
         //详细信息
         public ActionResult Details(int id)
@@ -77,20 +114,22 @@ namespace Music.Controllers
             Album album = storeDB.Albums.Find(id);
             return View(album);
         }
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        //依然使用FormCollection来处理表单提交的数据
+        [HttpPost,ActionName("Delete")]
+        public ActionResult DeleteConfired(int id)
         {
             try
             {
                 Album album = storeDB.Albums.Find(id);
+                //storeDB.Entry(album).State = EntityState.Deleted;
                 storeDB.Albums.Remove(album);
+                storeDB.SaveChanges();
                 return RedirectToAction("Index");
             }
-            catch 
+            catch
             {
                 return View();
             }
         }
-      
     }
 }
