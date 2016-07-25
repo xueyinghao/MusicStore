@@ -71,3 +71,4 @@ E:\薛少爷\MusicStore\Music\Music\bin\zh-Hans\Microsoft.Owin.Security.Twitter.
 E:\薛少爷\MusicStore\Music\Music\bin\zh-Hans\Microsoft.Owin.Security.MicrosoftAccount.resources.dll
 E:\薛少爷\MusicStore\Music\Music\obj\Debug\Music.dll
 E:\薛少爷\MusicStore\Music\Music\obj\Debug\Music.pdb
+E:\薛少爷\MusicStore\Music\Music\obj\Debug\Music.csprojResolveAssemblyReference.cache
